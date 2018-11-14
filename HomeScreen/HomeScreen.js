@@ -28,44 +28,39 @@ export default class HomePage extends Component {
 
 			
 			<Container>
-				<Header>
-         			<Left>
-            			<Title>Главная</Title>
-          			</Left>
-          			<Body/>
+				<Header style={styles.header}>
+         			
+          			<Body>
+          				<Image
+                         	style={styles.image}
+                         	source={require('../logo/LOGO_360.png')} />		
+                    </Body>
           			
-         			<Right />
+         		
         		</Header>
 				
 				<Content padder >	
 				
 				
-				    <View style={styles.logo}>								
-						<Image
-                         style={styles.image}
-                         source={require('../logo/LOGO_360.png')}
-						 
-                        />					
-						
-				    </View>
+			
 					
 					<View style={styles.buttonMenu}>
 											
-						<Button block light style={styles.button}
+						<Button block style={styles.button}
 							onPress={() => this.props.navigation.navigate('О спректрофотометрах')} >
 							<Text>О спректрофотометрах</Text>									
 						</Button>
-						<Button block light style={styles.button}
+						<Button block style={styles.button}
 							onPress={() => this.props.navigation.navigate('Отправить отзыв')} >
 							<Text>Отправить отзыв</Text>					
 						</Button>
-						<Button block light style={styles.button} onPress={() => this.props.navigation.navigate('Замечания и пожелания')} >
+						<Button block style={styles.button} onPress={() => this.props.navigation.navigate('Замечания и пожелания')} >
 							<Text>Замечания и пожелания</Text>					
 						</Button>
-						<Button block light style={styles.button}>
+						<Button block style={styles.button}>
 							<Text>Инструкции по эксплуатации</Text>					
 						</Button>
-						<Button block light style={styles.button} onPress={() => this.props.navigation.navigate('Расчет по коэффициентам')}>
+						<Button block style={styles.button} onPress={() => this.props.navigation.navigate('Расчет по коэффициентам')}>
 							<Text>Рассчет по коэффициентам</Text>							
 						</Button>
 					</View>
@@ -94,20 +89,30 @@ var styles = StyleSheet.create({
 	image: {
 		width: 360, 
 		height: 76,
+		marginLeft:'5%',
   },
   
     buttonMenu: {
 		flex: 5,
         flexDirection: 'column',
         alignItems: 'flex-start', //replace with flex-end or center
-		marginBottom: 10
+		marginBottom: 10,
+
 		
 	},
 	
 	button: {
 		marginTop: 10,
+		backgroundColor: '#2079BD',
+		fontFamily: 'Arial',
 		
-		
+	},
+
+	header: {
+		height:'40%',
+		backgroundColor: '#fff',
+        borderBottomWidth: 0,
+
 	},
 	
 });
