@@ -65,7 +65,7 @@ export default class CoefficientCalculationScreen extends Component {
 		
 	
 
-    this.setState({k1: this.state.k1});
+   /// this.setState({k1: this.state.k1});
 
     ///alert(this.state.k1);
     k0 = parseFloat(this.state.k0);
