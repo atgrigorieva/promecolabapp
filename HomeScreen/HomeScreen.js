@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, Accordion } from 'native-base';
 import { View, Image, StyleSheet,} from 'react-native';
 import { createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
+import Orientation from 'react-native-orientation-locker';
 //import { Navigation } from 'react-native-navigation'
 
 ///import AboutSpectrScreen from "../AboutSpectrScreen/index.js";
@@ -19,6 +20,9 @@ import { createStackNavigator, StackActions, NavigationActions } from 'react-nav
 
 
 export default class HomePage extends Component {
+	componentDidMount(){
+    Orientation.lockToPortrait();
+  }
 	
 	render() {
 		//const { navigate } = this.props.navigation.navigate;
@@ -89,7 +93,8 @@ var styles = StyleSheet.create({
 	image: {
 		width: 360, 
 		height: 76,
-		marginLeft:'5%',
+		marginLeft:'auto',
+		marginRight:'auto',
   },
   
     buttonMenu: {
