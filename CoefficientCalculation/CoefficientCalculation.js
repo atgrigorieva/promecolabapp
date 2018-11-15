@@ -12,6 +12,8 @@ import { View, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-nati
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
 import {  Grid, LineChart, XAxis, YAxis  } from 'react-native-svg-charts'
+import Orientation from 'react-native-orientation-locker';
+
 
 /*var approximation_type_radiobatton = [
   {label: 'Линейная через 0', value: 0 },
@@ -29,6 +31,9 @@ const data_ = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5];
 const axesSvg = { fontSize: 13, fill: 'black' };
 const verticalContentInset = { top: 10, bottom: 10 };
 const xAxisHeight = 20;
+
+
+
 
 export default class CoefficientCalculationScreen extends Component {
 
@@ -48,7 +53,10 @@ export default class CoefficientCalculationScreen extends Component {
    		}
   	}
 
-
+  componentDidMount(){
+    Orientation.lockToLandscape();
+  }
+    
 	Chart = () => {
 
     type_approximation = '';
@@ -106,12 +114,13 @@ export default class CoefficientCalculationScreen extends Component {
 
     this.setState({data: this.state.data = theArray});
     this.setState({equation: this.state.equation = equation_});
-
+    
 	}
 
 	render() {
 		
 		return(
+
 			
 			<Container>
 				<Header>
