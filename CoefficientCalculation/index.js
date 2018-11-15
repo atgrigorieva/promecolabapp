@@ -1,10 +1,10 @@
 import { DrawerNavigator } from 'react-navigation';
-import CoefficientCalculation from "./CoefficientCalculation.js";
+import graduation from "./Graduation.js";
 
 
 const CoefficientCalculationRoute = DrawerNavigator({
   //Home: { screen: HomePage },
-  CoefficientCalculationScreen: { screen: CoefficientCalculation},
+  graduationScreen: { screen: graduation},
   
     ///Profile: { screen: ProfileScreen },
 });
