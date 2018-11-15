@@ -3,6 +3,8 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Bod
 import { View, Image, StyleSheet, TextInput, TouchableOpacity, Linking } from 'react-native';
 
 
+
+
 export default class CommentsSuggestions extends Component{
 
   constructor(props) {
