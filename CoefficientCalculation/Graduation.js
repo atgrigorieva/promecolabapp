@@ -24,11 +24,17 @@ export default class Graduation extends Component {
             unit_type: '',
             calibration_type: 'Coe K',
             COValue: '',
-            countCO: '0',
+            number: '0',
+            k0: '------------',
+            k1: '------------',
+            k2: '------------',
             modalVisibleApproxim: false,
             modalVisibleUnit: false,
             modalVisibleCalibration: false,
-            modalVisibleCO:false,
+            modalVisibleNumber: false,
+            modalVisibleEnterCoefficient: false,
+
+            coefficientK: '',
 
    		}
   	}
@@ -50,8 +56,16 @@ export default class Graduation extends Component {
         this.setState({modalVisibleCalibration: visible});
     }
 
-    setmodalVisibleCO(visible) {
-        this.setState({modalVisibleCO: visible});
+    setmodalVisibleNumber(visible, coefficientK_ = '') {
+        if(coefficientK_ != ''){
+            this.setState({coefficientK: coefficientK_});
+        }
+       this.setState({modalVisibleNumber: visible});
+
+    }
+    setmodalVisibleEnterCoefficient(visible) {
+        this.setState({modalVisibleEnterCoefficient: visible});
+
     }
 
     TypeApproxim(approx){
@@ -72,9 +86,79 @@ export default class Graduation extends Component {
         this.setmodalVisibleCalibration(!this.state.modalVisibleCalibration);
     }
 
-    CO(coValue){
-        this.setState({COValue: coValue});
-        this.setmodalVisibleCalibration(!this.state.modalVisibleCO);
+    Number(NumberValue) {
+        if (this.state.calibration_type == 'Std I') {
+
+            if (NumberValue.indexOf('.') != -1) {
+                NumberValue = NumberValue.substr(0, NumberValue.indexOf('.'));
+            }
+
+            if (NumberValue > 10 || NumberValue < 2) {
+                NumberValue = 2;
+            }
+        }
+
+        if (this.state.calibration_type == 'Std I'){
+            this.setState({COValue: NumberValue});
+        }
+        else{
+
+            if (this.state.coefficientK == 'k2'){
+                this.setState({k2: NumberValue});
+            }
+
+            if (this.state.coefficientK == 'k1'){
+                this.setState({k1: NumberValue});
+            }
+
+            if (this.state.coefficientK == 'k0'){
+                this.setState({k0: NumberValue});
+            }
+
+
+        }
+
+        this.setmodalVisibleNumber(!this.state.modalVisibleNumber);
+        this.state.number = '0';
+
+
+    }
+
+    NumberPress(numberT){
+
+
+
+        if (this.state.number == '0'){
+
+            this.state.number = this.state.number.substring(0, this.state.number.length - 1);
+        }
+
+        if (numberT != '-'){
+            this.setState({number: this.state.number + numberT});
+        }
+        else{
+            this.setState({number: numberT + this.state.number});
+        }
+
+
+
+    }
+
+    CPress(){
+        this.setState({number: this.state.number.substring(0, this.state.number.length - 1)});
+    }
+
+
+
+    NextScreen(){
+
+        if (this.state.calibration_type == 'Coe K'){
+
+            this.setmodalVisibleEnterCoefficient(true);
+        }
+        else{
+
+        }
     }
 
 	render() {
@@ -250,10 +334,10 @@ export default class Graduation extends Component {
                     <Modal
                         animationType="slide"
                         transparent={false}
-                        visible={this.state.modalVisibleCO}
+                        visible={this.state.modalVisibleNumber}
                         onRequestClose={() => {
 
-                            this.setmodalVisibleCO(!this.state.modalVisibleCO);
+                            this.setmodalVisibleNumber(!this.state.modalVisibleNumber);
                         }}>
 
                         <Content padder style={{backgroundColor:'#31418f'}}>
@@ -269,23 +353,42 @@ export default class Graduation extends Component {
                                     borderColor: 'black',
                                     backgroundColor:'white'}}
                                 >
-                                    <Text style={styles.titleText}>{this.state.countCO}</Text>
+                                    <Text style={styles.titleText}>{this.state.number}</Text>
 
                                 </View>
 
                                 <View style={{flex:1,
                                     flexDirection: 'row', paddingTop:20}}>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>7</Text></Button>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>8</Text></Button>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>9</Text></Button>
-                                    <Button light style={styles.ButtonCOLast}><Text style={styles.NumberText}>C</Text></Button>
+                                    <Button light style={styles.ButtonCO} onPress={() => this.NumberPress("7")}>
+                                        <Text style={styles.NumberText}>7</Text>
+                                    </Button>
+                                    <Button light style={styles.ButtonCO} onPress={() => this.NumberPress("8")}>
+                                        <Text style={styles.NumberText}>8</Text>
+                                    </Button>
+                                    <Button light style={styles.ButtonCO} onPress={() => this.NumberPress("9")}>
+                                        <Text style={styles.NumberText}>9</Text>
+                                    </Button>
+                                    <Button
+                                        light
+                                        style={styles.ButtonCOLast}
+                                        onPress={() => this.CPress()}>
+                                        <Text style={styles.NumberText}>C</Text>
+                                    </Button>
                                 </View>
                                 <View style={{flex:1,
                                     flexDirection: 'row',}}>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>4</Text></Button>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>5</Text></Button>
-                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>6</Text></Button>
-                                    <Button light style={styles.ButtonCOLast}><Text style={styles.NumberText}>-</Text></Button>
+                                    <Button light style={styles.ButtonCO} onPress={() => this.NumberPress("4")}>
+                                        <Text style={styles.NumberText}>4</Text>
+                                    </Button>
+                                    <Button light style={styles.ButtonCO}  onPress={() => this.NumberPress("5")}>
+                                        <Text style={styles.NumberText}>5</Text>
+                                    </Button>
+                                    <Button light style={styles.ButtonCO} onPress={() => this.NumberPress("6")}>
+                                        <Text style={styles.NumberText}>6</Text>
+                                    </Button>
+                                    <Button light style={styles.ButtonCOLast} onPress={() => this.NumberPress("-")}>
+                                        <Text style={styles.NumberText}>-</Text>
+                                    </Button>
 
                                 </View>
                                 <View style={{flex:1,
@@ -293,23 +396,38 @@ export default class Graduation extends Component {
                                     <View style={{ marginBottom: 20, width:'76%'}}>
                                         <View style={{flex:1,
                                             flexDirection: 'row', height:25}}>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>1</Text></Button>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>2</Text></Button>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>3</Text></Button>
+                                            <Button light style={styles.ButtonCO1} onPress={() => this.NumberPress("1")}>
+                                                <Text style={styles.NumberText}>1</Text>
+                                            </Button>
+                                            <Button light style={styles.ButtonCO1} onPress={() => this.NumberPress("2")}>
+                                                <Text style={styles.NumberText}>2</Text>
+                                            </Button>
+                                            <Button light style={styles.ButtonCO1} onPress={() => this.NumberPress("3")}>
+                                                <Text style={styles.NumberText}>3</Text>
+                                            </Button>
 
                                         </View>
                                         <View style={{flex:1,
                                             flexDirection: 'row', height:25, marginTop: 20,}}>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>ESC</Text></Button>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>0</Text></Button>
-                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>.</Text></Button>
+                                            <Button
+                                                light
+                                                style={styles.ButtonCO1}
+                                                onPress={() => {this.setmodalVisibleNumber(!this.state.modalVisibleNumber)}}>
+                                                <Text style={styles.NumberText}>ESC</Text>
+                                            </Button>
+                                            <Button light style={styles.ButtonCO1} onPress={() => this.NumberPress("0")}>
+                                                <Text style={styles.NumberText}>0</Text>
+                                            </Button>
+                                            <Button light style={styles.ButtonCO1} onPress={() => this.NumberPress(".")}>
+                                                <Text style={styles.NumberText}>.</Text>
+                                            </Button>
 
                                         </View>
                                     </View>
 
                                         <Button light style={{
                                             marginTop: 10,
-                                            height: 100,marginRight:20, width:'24%'}}>
+                                            height: 100,marginRight:20, width:'24%'}} onPress={() => this.Number(this.state.number)}>
                                             <Text style={styles.EnterText}>ENTER</Text>
                                         </Button>
 
@@ -318,6 +436,89 @@ export default class Graduation extends Component {
                         </Content>
 
                     </Modal>
+
+
+                    {/*Экран настройки коэффициентов*/}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisibleEnterCoefficient}
+                        onRequestClose={() => {
+
+                            this.setmodalVisibleEnterCoefficient(!this.state.modalVisibleEnterCoefficient);
+                        }}
+                    >
+
+                        <Header>
+                            <Body>
+                            <Title>Ввод коэффициента</Title>
+                            </Body>
+                        </Header>
+
+                        <Content>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    if (this.state.approximation_type == 'SQU') {
+                                        this.setmodalVisibleNumber(true, 'k2');
+                                    }
+                                }}>
+                                <View style={{flex:1, flexDirection: 'row', borderBottomWidth:0.5, borderBottomColor: 'black', paddingTop: 30}}>
+                                    <View style={{width: '80%', paddingBottom: 30}}><Text style={{paddingLeft: 50}}>Коффициент К2</Text></View>
+                                    <View><Text>{this.state.k2}</Text></View>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this.setmodalVisibleNumber(true, 'k1');
+                                }}>
+                                <View style={{flex:1, flexDirection: 'row', borderBottomWidth:0.5, borderBottomColor: 'black', paddingTop: 30}}>
+                                    <View style={{width: '80%', paddingBottom: 30}}><Text style={{paddingLeft: 50}}>Коффициент К1</Text></View>
+                                    <View><Text>{this.state.k1}</Text></View>
+                                </View>
+                            </TouchableHighlight>
+                            <TouchableHighlight
+                                onPress={() => {
+                                    if (this.state.approximation_type == 'LIN') {
+                                        this.setmodalVisibleNumber(true, 'k0');
+                                    }
+                                }}>
+                                <View style={{flex:1, flexDirection: 'row', borderBottomWidth:0.5, borderBottomColor: 'black', paddingTop: 30}}>
+                                    <View style={{width: '80%', paddingBottom: 30}}><Text style={{paddingLeft: 50}}>Коффициент К0</Text></View>
+                                    <View><Text>{this.state.k0}</Text></View>
+                                </View>
+                            </TouchableHighlight>
+                        </Content>
+
+                        <Footer>
+                            <Left>
+                                <Button primary onPress={() => {this.setmodalVisibleEnterCoefficient(!this.state.modalVisibleEnterCoefficient)}}>
+                                    <Text>Назад</Text>
+
+
+
+                                </Button>
+                            </Left>
+                            <Body>
+                                <Button active primary>
+
+                                    <Text>Далее</Text>
+
+
+                                </Button>
+                            </Body>
+                            <Right>
+                                <Button info onPress={() => {this.props.navigation.goBack(null)}}>
+
+                                    <Text>Отмена</Text>
+
+                                </Button>
+                            </Right>
+                        </Footer>
+
+                    </Modal>
+
+
 
 
 
@@ -385,7 +586,7 @@ export default class Graduation extends Component {
                             </TouchableHighlight>
                             <TouchableHighlight
                                 onPress={() => {
-                                    this.setmodalVisibleCO(true);
+                                    this.setmodalVisibleNumber(true);
                                 }}>
                             <View style={{flex: 1, flexDirection: 'row', borderTopWidth: 0.5,
                                 borderTopColor: 'black',}}>
@@ -409,15 +610,15 @@ export default class Graduation extends Component {
 				</Content>
 				<Footer>
 					<Left>
-						<Button active primary>						
-							
+						<Button active primary onPress={() => {this.NextScreen();}}>
+
 							<Text>Далее</Text>
-							
+
 
 						</Button>
 					</Left>
 						<Right>
-						<Button info>
+						<Button info onPress={() => {this.props.navigation.goBack(null)}}>
 
 
 							<Text>Отмена</Text>
@@ -428,12 +629,12 @@ export default class Graduation extends Component {
 
 
 				</Footer>
-				
+
 			</Container>
     );
-		
+
 	}
-	
+
 }
 
 var styles = StyleSheet.create({
@@ -447,7 +648,7 @@ var styles = StyleSheet.create({
 
 	container: {
     	flex: 1,
-    	
+
    		backgroundColor: '#F5FCFF',
   	},
   	welcome: {
@@ -457,12 +658,12 @@ var styles = StyleSheet.create({
     	marginBottom: 10,
   	},
   	instructions: {
-    	
+
     	color: '#333333',
     	marginBottom: 5,
   	},
-  	component: {    	
-    	
+  	component: {
+
   	},
   	radioStyle: {
     	borderRightWidth: 1,
@@ -473,7 +674,7 @@ var styles = StyleSheet.create({
     	marginRight: 5
   	},
 
-  
+
   	textAreaContainer: {
     	borderColor: 'grey',
     	borderWidth: 1,
