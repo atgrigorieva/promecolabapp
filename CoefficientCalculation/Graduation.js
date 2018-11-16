@@ -23,9 +23,12 @@ export default class Graduation extends Component {
     	    approximation_type: "LIN",
             unit_type: '',
             calibration_type: 'Coe K',
+            COValue: '',
+            countCO: '0',
             modalVisibleApproxim: false,
             modalVisibleUnit: false,
             modalVisibleCalibration: false,
+            modalVisibleCO:false,
 
    		}
   	}
@@ -47,6 +50,10 @@ export default class Graduation extends Component {
         this.setState({modalVisibleCalibration: visible});
     }
 
+    setmodalVisibleCO(visible) {
+        this.setState({modalVisibleCO: visible});
+    }
+
     TypeApproxim(approx){
         this.setState({approximation_type: approx});
 
@@ -62,8 +69,12 @@ export default class Graduation extends Component {
 
     TypeCalibration(calibration){
         this.setState({calibration_type: calibration});
-
         this.setmodalVisibleCalibration(!this.state.modalVisibleCalibration);
+    }
+
+    CO(coValue){
+        this.setState({COValue: coValue});
+        this.setmodalVisibleCalibration(!this.state.modalVisibleCO);
     }
 
 	render() {
@@ -122,9 +133,6 @@ export default class Graduation extends Component {
 
                                 </Button>
                             </Right>
-
-
-
                         </Footer>
                     </Modal>
 
@@ -237,6 +245,81 @@ export default class Graduation extends Component {
                     </Modal>
 
 
+                    {/*Количество CO*/}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisibleCO}
+                        onRequestClose={() => {
+
+                            this.setmodalVisibleCO(!this.state.modalVisibleCO);
+                        }}>
+
+                        <Content padder style={{backgroundColor:'#31418f'}}>
+                            <View style={{paddingTop:20}}>
+                                <View style={{
+                                    flex:1,
+                                    flexDirection: 'row',
+                                    height: 70,
+                                    borderBottomWidth: 0.5,
+                                    borderLeftWidth: 0.5,
+                                    borderTopWidth: 0.5,
+                                    borderRightWidth: 0.5,
+                                    borderColor: 'black',
+                                    backgroundColor:'white'}}
+                                >
+                                    <Text style={styles.titleText}>{this.state.countCO}</Text>
+
+                                </View>
+
+                                <View style={{flex:1,
+                                    flexDirection: 'row', paddingTop:20}}>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>7</Text></Button>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>8</Text></Button>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>9</Text></Button>
+                                    <Button light style={styles.ButtonCOLast}><Text style={styles.NumberText}>C</Text></Button>
+                                </View>
+                                <View style={{flex:1,
+                                    flexDirection: 'row',}}>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>4</Text></Button>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>5</Text></Button>
+                                    <Button light style={styles.ButtonCO}><Text style={styles.NumberText}>6</Text></Button>
+                                    <Button light style={styles.ButtonCOLast}><Text style={styles.NumberText}>-</Text></Button>
+
+                                </View>
+                                <View style={{flex:1,
+                                    flexDirection: 'row', width: '100%'}}>
+                                    <View style={{ marginBottom: 20, width:'76%'}}>
+                                        <View style={{flex:1,
+                                            flexDirection: 'row', height:25}}>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>1</Text></Button>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>2</Text></Button>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>3</Text></Button>
+
+                                        </View>
+                                        <View style={{flex:1,
+                                            flexDirection: 'row', height:25, marginTop: 20,}}>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>ESC</Text></Button>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>0</Text></Button>
+                                            <Button light style={styles.ButtonCO1}><Text style={styles.NumberText}>.</Text></Button>
+
+                                        </View>
+                                    </View>
+
+                                        <Button light style={{
+                                            marginTop: 10,
+                                            height: 100,marginRight:20, width:'24%'}}>
+                                            <Text style={styles.EnterText}>ENTER</Text>
+                                        </Button>
+
+                                </View>
+                            </View>
+                        </Content>
+
+                    </Modal>
+
+
 
                     {/*Основной код страницы*/}
 
@@ -300,20 +383,26 @@ export default class Graduation extends Component {
                                     </View>
                                 </View>
                             </TouchableHighlight>
-
+                            <TouchableHighlight
+                                onPress={() => {
+                                    this.setmodalVisibleCO(true);
+                                }}>
                             <View style={{flex: 1, flexDirection: 'row', borderTopWidth: 0.5,
                                 borderTopColor: 'black',}}>
-                                <View style={styles.ViewLeft1}>
-                                    <Text>
-                                        Количество CO
-                                    </Text>
-                                </View>
-                                <View style={styles.ViewLeft1}>
-                                    <Text>
-                                        LIN
-                                    </Text>
-                                </View>
+
+                                    <View style={styles.ViewLeft1}>
+                                        <Text>
+                                            Количество CO
+                                        </Text>
+                                    </View>
+                                    <View style={styles.ViewLeft1}>
+                                        <Text>
+                                            {this.state.COValue}
+                                        </Text>
+                                    </View>
+
                             </View>
+                            </TouchableHighlight>
                         </View>
                     </View>
 
@@ -464,4 +553,46 @@ var styles = StyleSheet.create({
         fontFamily: 'Arial',
 
     },
+
+    titleText: {
+        fontSize: 50,
+        textAlign: 'right',
+        width: '100%',
+        paddingRight: 10,
+    },
+
+    ButtonCO: {
+        marginTop: 10,
+        width: '24%',
+        marginRight:10,
+        paddingBottom:20,
+    },
+
+    ButtonCO1: {
+        marginTop: 10,
+        width: '31.5%',
+        marginRight:10,
+        paddingBottom:20,
+    },
+    ButtonCOLast:{
+        marginTop: 10,
+        width: '24%',
+        marginRight:0,
+        paddingBottom:20,
+
+    },
+    NumberText: {
+        fontSize: 30,
+        textAlign: 'center',
+        width: '100%',
+        paddingTop: 10,
+        fontFamily: 'Arial'
+    },
+
+    EnterText:{
+        fontSize: 30,
+        textAlign: 'center',
+        width: '100%',
+        fontFamily: 'Arial'
+    }
 });
