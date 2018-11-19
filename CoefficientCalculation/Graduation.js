@@ -21,9 +21,9 @@ export default class Graduation extends Component {
     	super(props)
    		this.state = {
     	    approximation_type: "LIN",
-            unit_type: '',
-            calibration_type: 'Coe K',
-            COValue: '',
+            unit_type: '------------',
+            calibration_type: 'Std I',
+            COValue: '------------',
             number: '0',
             k0: '------------',
             k1: '------------',
@@ -33,8 +33,20 @@ export default class Graduation extends Component {
             modalVisibleCalibration: false,
             modalVisibleNumber: false,
             modalVisibleEnterCoefficient: false,
+            modalVisiblePlotCoefficients: false,
+            modalVisibleEnterStandartSample: false,
 
             coefficientK: '',
+
+            data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5],
+            equation: 'С(А) = ',
+
+            concentration: [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000],
+            abs: [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000],
+            variableABS: '',
+            indexABS: 0,
+
+           /// TableViewEnterStandartSimple: '<View><Text>Hello</Text></View>'
 
    		}
   	}
@@ -56,9 +68,19 @@ export default class Graduation extends Component {
         this.setState({modalVisibleCalibration: visible});
     }
 
-    setmodalVisibleNumber(visible, coefficientK_ = '') {
+    setmodalVisibleNumber(visible, coefficientK_ = '', variable_ = '', index_ = '') {
         if(coefficientK_ != ''){
             this.setState({coefficientK: coefficientK_});
+        }
+        if (this.state.calibration_type == 'Std I'){
+            ////alert(index_);
+            if(variable_ != '') {
+                this.setState({variableABS: variable_});
+            }
+            if(index_ != '') {
+             //   alert(index_);
+                this.setState({indexABS: parseInt(index_)});
+            }
         }
        this.setState({modalVisibleNumber: visible});
 
@@ -66,6 +88,15 @@ export default class Graduation extends Component {
     setmodalVisibleEnterCoefficient(visible) {
         this.setState({modalVisibleEnterCoefficient: visible});
 
+    }
+
+    setmodalVisiblePlotCoefficients(visible){
+        this.setState({modalVisiblePlotCoefficients: visible});
+
+    }
+
+    setmodalVisibleEnterStandartSample(visible){
+        this.setState({modalVisibleEnterStandartSample: visible});
     }
 
     TypeApproxim(approx){
@@ -89,17 +120,37 @@ export default class Graduation extends Component {
     Number(NumberValue) {
         if (this.state.calibration_type == 'Std I') {
 
-            if (NumberValue.indexOf('.') != -1) {
-                NumberValue = NumberValue.substr(0, NumberValue.indexOf('.'));
-            }
+            if (this.state.variable == '') {
 
-            if (NumberValue > 10 || NumberValue < 2) {
-                NumberValue = 2;
+                if (NumberValue.indexOf('.') != -1) {
+                    NumberValue = NumberValue.substr(0, NumberValue.indexOf('.'));
+                }
+
+                if (NumberValue > 10 || NumberValue < 2) {
+                    NumberValue = 2;
+                }
             }
         }
 
+
         if (this.state.calibration_type == 'Std I'){
-            this.setState({COValue: NumberValue});
+            ///alert(this.state.variableABS);
+            if (this.state.variableABS == '') {
+                this.setState({COValue: NumberValue});
+            }
+            else{
+                if(this.state.variableABS == 'abs'){
+                    abs_ = this.state.abs;
+                    alert(this.state.indexABS);
+                    abs_[this.state.indexABS] = NumberValue;
+                    this.setState({abs: abs_});
+                }
+                if(this.state.variableABS == 'concentration'){
+                    concentration_ = this.state.concentration;
+                    concentration_[this.state.indexABS] = NumberValue;
+                    this.setState({concentration: concentration_});
+                }
+            }
         }
         else{
 
@@ -127,10 +178,23 @@ export default class Graduation extends Component {
     NumberPress(numberT){
 
 
+        if (this.state.calibration_type == 'Std I') {
+            if (this.state.number == '0' && this.state.variableABS == '') {
 
-        if (this.state.number == '0'){
+                this.state.number = this.state.number.substring(0, this.state.number.length - 1);
+            }
+            else{
+                if (this.state.number == '0' && numberT != '.' &&  this.state.variableABS != ''){
+                    this.state.number = this.state.number.substring(0, this.state.number.length - 1);
+                }
+            }
+        }
+        if (this.state.calibration_type == 'Coe K') {
 
-            this.state.number = this.state.number.substring(0, this.state.number.length - 1);
+            if (this.state.number == '0' && numberT != '.'){
+                this.state.number = this.state.number.substring(0, this.state.number.length - 1);
+            }
+
         }
 
         if (numberT != '-'){
@@ -158,7 +222,153 @@ export default class Graduation extends Component {
         }
         else{
 
+            this.setmodalVisibleEnterStandartSample(true);
         }
+    }
+
+
+    ChartCoefficients() {
+
+        this.setmodalVisiblePlotCoefficients(true);
+
+
+        if(this.state.data.length > 11){
+            this.state.data.shift();
+        }
+        theArray = this.state.data;
+        equation = '';
+
+        if(this.state.approximation_type == "LIN 0"){
+
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+
+            k1 = parseFloat(this.state.k1);
+
+            data_.forEach(function(element, index){
+
+               theArray[index] = parseFloat((data_[index] * k1).toFixed(2));
+                equation_ = 'С(А) = ' + k1 + ' * A';
+
+
+
+            });
+
+
+        }
+        if(this.state.approximation_type == "LIN"){
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+            if(this.state.k0 == '------------'){
+                this.state.k0 = 0;
+            }
+            k0 = parseFloat(this.state.k0);
+            k1 = parseFloat(this.state.k1);
+
+            data_.forEach(function(element, index){
+
+                theArray[index] = parseFloat((k0 + data_[index] * k1).toFixed(2));
+                equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A';
+
+            });
+
+        }
+        if(this.state.approximation_type == "SQU"){
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+            if(this.state.k0 == '------------'){
+                this.state.k0 = 0;
+            }
+            if(this.state.k2 == '------------'){
+                this.state.k2 = 0;
+            }
+            k0 = parseFloat(this.state.k0);
+            k1 = parseFloat(this.state.k1);
+            k2 = parseFloat(this.state.k2);
+
+            data_.forEach(function(element, index){
+
+                theArray[index] = parseFloat((k0 + data_[index] * k1 + k2 * data_[index] * data_[index]).toFixed(1));
+                equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A  + ' + k2 + ' * A^2';
+
+            });
+        }
+
+        this.setState({data: this.state.data = theArray});
+        this.setState({equation: this.state.equation = equation_});
+    }
+
+    TableViewEnterStandartSimple(startIndex) {
+
+        if(this.state.COValue == '------------') {
+            this.state.COValue = '2';
+        }
+
+        COValue = parseInt(this.state.COValue, 10);
+
+        component = [];
+        /*component.push(<View style={{flex: 1, flexDirection: 'row', marginBottomWidth: 0.5, marginBottomColor: 'black', width:'50%'}}>
+            <Text style={{width:'10%', borderRightWidth: 0.5,
+                borderRightColor: 'black', marginLeft:10, marginRight:5}}>Назв</Text>
+            <Text style={{width:'10%', borderRightWidth: 0.5,
+                borderRightColor: 'black', marginLeft:10, marginRight:5}}>ABS</Text>
+            <Text style={{width:'10%', borderRightWidth: 0.5,
+                borderRightColor: 'black', marginLeft:10, marginRight:5}}>Конц</Text>
+        </View>);*/
+
+        for(var index = startIndex; index < startIndex + 5; index++){
+
+            if(index < COValue) {
+
+
+                indexSTD = index.toString();
+                indexSTD = parseInt(indexSTD);
+                alert(indexSTD);
+                    component.push(<View
+                    style={{flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: 'black',alignItems:'center',
+                        justifyContent:'center', height: 50}}>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }}>STD-{index+1}</Text>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }} onPress={() => this.setmodalVisibleNumber(true, '', 'abs', parseInt(indexSTD))}>{this.state.abs[parseInt(indexSTD)]}</Text>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }} onPress={() => this.setmodalVisibleNumber(true, '', 'concentration', parseInt(indexSTD))}>{this.state.concentration[parseInt(indexSTD)]}</Text>
+                </View>);
+            }
+            else{
+                component.push(<View
+                    style={{flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: 'black',alignItems:'center',
+                        justifyContent:'center', height: 50}}>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }}>STD-{index+1}</Text>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }}></Text>
+                    <Text style={{
+                        width: '30%', borderRightWidth: 0.5,
+                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                    }}></Text>
+                </View>);
+            }
+
+        }
+
+        return component;
+
+
+
     }
 
 	render() {
@@ -437,6 +647,113 @@ export default class Graduation extends Component {
 
                     </Modal>
 
+                    {/*Экран завршения работы в режиме коэффициенты (Построение графика и вывод итоговой информации*/}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisiblePlotCoefficients}
+                        onRequestClose={() => {
+
+                            this.setmodalVisiblePlotCoefficients(!this.state.modalVisiblePlotCoefficients);
+                        }}>
+
+                        <Header><Body><Title>Завершение</Title></Body></Header>
+                        <Content>
+                            <View style={{flex:1, flexDirection: 'row'}}>
+
+                                <View style={{ height: 250, width: '70%', marginBottom:20, marginTop:20, flexDirection: 'row' , marginLeft: 5}}>
+                                    <YAxis
+                                        data={this.state.data}
+
+                                        style={{ marginBottom: xAxisHeight }}
+                                        contentInset={verticalContentInset}
+                                        formatLabel={(value, index) => data_[index]
+
+
+                                        }
+                                        svg={axesSvg}/>
+                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                        <LineChart
+                                            style={{ flex: 1 }}
+                                            data={this.state.data}
+                                            dashArray={[5,5]}
+                                            contentInset={verticalContentInset}
+                                            svg={{ stroke: 'rgb(134, 65, 244)' }}
+
+                                        >
+                                            <Grid showGrid={true}/>
+                                        </LineChart>
+                                        <XAxis
+                                            style={{ marginHorizontal: -10, height: xAxisHeight }}
+                                            data={data_}
+                                            formatLabel={(value, index) => this.state.data[index]}
+                                            contentInset={{ left: 10, right: 10 }}
+                                            svg={axesSvg}/>
+                                    </View>
+                                </View>
+                                <View style={{borderLeftWidth: 0.5,
+                                    borderTopColor: 'black', marginLeft:20}}>
+
+                                    <View style={{flex:1, flexDirection: 'row', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text>
+                                                Ед.и:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text>
+                                                {this.state.unit_type}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text>
+                                                Кали:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text>
+                                                {this.state.approximation_type}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text>
+                                                Кол СО:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text>
+                                                {this.state.COValue}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+
+                                        <View>
+                                            <Text>
+                                                {this.state.equation}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                </View>
+                            </View>
+                        </Content>
+                        <Footer>
+                            <Right>
+                                <Button info onPress={() => {this.props.navigation.goBack(null)}}><Text>Завершение</Text></Button>
+                            </Right>
+                        </Footer>
+                    </Modal>
 
                     {/*Экран настройки коэффициентов*/}
 
@@ -500,7 +817,7 @@ export default class Graduation extends Component {
                                 </Button>
                             </Left>
                             <Body>
-                                <Button active primary>
+                                <Button active primary onPress={() => {this.ChartCoefficients()}}>
 
                                     <Text>Далее</Text>
 
@@ -518,6 +835,92 @@ export default class Graduation extends Component {
 
                     </Modal>
 
+                    {/*Экран ввода стандартныз образцов*/}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisibleEnterStandartSample}
+                        onRequestClose={() => {
+
+                            this.setmodalVisibleEnterStandartSample(!this.state.modalVisibleEnterStandartSample);
+                        }}>
+
+                        <Header>
+                            <Body><Title>Ввод стандартных образцов</Title></Body>
+                        </Header>
+                        <Content>
+                            <View style={{flex: 1, flexDirection: 'row'}}>
+                                <View style={{marginTop:5, marginLeft:5, marginRight:5, borderTopWidth: 0.5, borderTopColor: 'black',
+                                    borderBottomWidth:0.5, borderBottomColor: 'black',
+                                    borderLeftWidth:0.5, borderLeftColor: 'black', width:'50%'
+                                }}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        borderBottomWidth: 0.5, borderBottomColor: 'black', height: 30}}>
+                                        <Text style={{width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            Назв
+                                        </Text>
+                                        <Text style={{
+                                            width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            ABS
+                                        </Text>
+                                        <Text style={{width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            Конц
+                                        </Text>
+                                    </View>
+                                    {this.TableViewEnterStandartSimple(0)}
+                                </View>
+                                <View style={{marginTop:5, marginLeft:5, marginRight:5, borderTopWidth: 0.5, borderTopColor: 'black',
+                                    borderBottomWidth:0.5, borderBottomColor: 'black',
+                                    borderLeftWidth:0.5, borderLeftColor: 'black', width:'50%'
+                                }}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        borderBottomWidth: 0.5, borderBottomColor: 'black', height: 30}}>
+                                        <Text style={{width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            Назв
+                                        </Text>
+                                        <Text style={{
+                                            width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            ABS
+                                        </Text>
+                                        <Text style={{width:'30%',
+                                            borderRightWidth: 0.5,
+                                            borderRightColor: 'black',
+                                            marginLeft:10,
+                                            marginRight:5}}>
+                                            Конц
+                                        </Text>
+                                    </View>
+                                    {this.TableViewEnterStandartSimple(5)}
+                                </View>
+                            </View>
+                        </Content>
+
+                    </Modal>
 
 
 
