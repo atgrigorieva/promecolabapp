@@ -41,10 +41,12 @@ export default class Graduation extends Component {
             data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5],
             equation: 'С(А) = ',
 
-            concentration: [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000],
-            abs: [0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000, 0.000],
+            concentration: {'1': 0.01, '2': 0.02, '3': 0.000, '4': 0.000, '5': 0.000, '6': 0.000,
+                '7': 0.000, '8': 0.000, '9': 0.000, '10': 0.000},
+            abs: {'1': 0.045, '2': 0.096, '3': 0, '4': 0.000, '5': 0.000, '6': 0.000,
+                '7': 0.000, '8': 0.000, '9': 0.000, '10': 0.000},
             variableABS: '',
-            indexABS: 0,
+            indexABS: '0',
 
            /// TableViewEnterStandartSimple: '<View><Text>Hello</Text></View>'
 
@@ -68,23 +70,29 @@ export default class Graduation extends Component {
         this.setState({modalVisibleCalibration: visible});
     }
 
-    setmodalVisibleNumber(visible, coefficientK_ = '', variable_ = '', index_ = '') {
+    setmodalVisibleNumber(visible, coefficientK_ = '') {
         if(coefficientK_ != ''){
             this.setState({coefficientK: coefficientK_});
         }
-        if (this.state.calibration_type == 'Std I'){
-            ////alert(index_);
-            if(variable_ != '') {
-                this.setState({variableABS: variable_});
-            }
-            if(index_ != '') {
-             //   alert(index_);
-                this.setState({indexABS: parseInt(index_)});
-            }
-        }
+
        this.setState({modalVisibleNumber: visible});
 
     }
+
+    setModalVisibleNumberForABS(visible, indexElm = ''){
+        this.state.variableABS = 'abs';
+        //alert(indexElm);
+        this.state.indexABS = indexElm;
+        this.setState({modalVisibleNumber: visible});
+    }
+
+    setModalVisibleNumberForConcentration(visible, indexElm = ''){
+        this.state.variableABS = 'concentration';
+        this.state.indexABS = indexElm;
+        ///alert(indexElm);
+        this.setState({modalVisibleNumber: visible});
+    }
+
     setmodalVisibleEnterCoefficient(visible) {
         this.setState({modalVisibleEnterCoefficient: visible});
 
@@ -120,7 +128,7 @@ export default class Graduation extends Component {
     Number(NumberValue) {
         if (this.state.calibration_type == 'Std I') {
 
-            if (this.state.variable == '') {
+            if (this.state.variableABS == '') {
 
                 if (NumberValue.indexOf('.') != -1) {
                     NumberValue = NumberValue.substr(0, NumberValue.indexOf('.'));
@@ -134,15 +142,16 @@ export default class Graduation extends Component {
 
 
         if (this.state.calibration_type == 'Std I'){
-            ///alert(this.state.variableABS);
+            //alert(this.state.variableABS);
             if (this.state.variableABS == '') {
                 this.setState({COValue: NumberValue});
             }
             else{
                 if(this.state.variableABS == 'abs'){
                     abs_ = this.state.abs;
-                    alert(this.state.indexABS);
+                    ///alert(this.state.indexABS);
                     abs_[this.state.indexABS] = NumberValue;
+                   // alert(abs_[this.state.indexABS]);
                     this.setState({abs: abs_});
                 }
                 if(this.state.variableABS == 'concentration'){
@@ -238,7 +247,7 @@ export default class Graduation extends Component {
         theArray = this.state.data;
         equation = '';
 
-        if(this.state.approximation_type == "LIN 0"){
+        if(this.state.approximation_type == "LIN-0"){
 
             if(this.state.k1 == '------------'){
                 this.state.k1 = 0;
@@ -300,6 +309,49 @@ export default class Graduation extends Component {
         this.setState({data: this.state.data = theArray});
         this.setState({equation: this.state.equation = equation_});
     }
+    LinearThroughZero(){
+        XY = parseFloat(0); SUMMY2 = parseFloat(0);
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++){
+
+            XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+            SUMMY2 += parseFloat(this.state.concentration[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+        }
+        this.state.k1 = XY / SUMMY2;
+
+        alert(this.state.k1);
+    }
+
+    Linear(){
+        XY = parseFloat(0); SUMMY2 = parseFloat(0); SUMMY = parseFloat(0); SUMMX = parseFloat(0);
+        x = 0, y = 0;
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++){
+
+            SUMMX += parseFloat(this.state.abs[(index+1).toString()]);
+            SUMMY += parseFloat(this.state.concentration[(index+1).toString()]);
+            SUMMY2 += parseFloat(this.state.concentration[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+            XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+        }
+
+        this.state.k0 = (SUMMY2 * SUMMX - SUMMY * XY) / (SUMMY2 - SUMMY * SUMMY);
+        this.state.k1 = (XY - SUMMY * SUMMX) / (SUMMY2 - SUMMY * SUMMY);
+
+        alert('k1 = ' + this.state.k1 +  ' k0 = '+ this.state.k0);
+    }
+
+    ChartABSConcentration() {
+
+        alert(this.state.approximation_type);
+
+        if(this.state.approximation_type == "LIN-0") {
+
+            this.LinearThroughZero();
+        }
+        if(this.state.approximation_type == "LIN") {
+
+            this.Linear();
+        }
+    }
+
 
     TableViewEnterStandartSimple(startIndex) {
 
@@ -310,44 +362,36 @@ export default class Graduation extends Component {
         COValue = parseInt(this.state.COValue, 10);
 
         component = [];
-        /*component.push(<View style={{flex: 1, flexDirection: 'row', marginBottomWidth: 0.5, marginBottomColor: 'black', width:'50%'}}>
-            <Text style={{width:'10%', borderRightWidth: 0.5,
-                borderRightColor: 'black', marginLeft:10, marginRight:5}}>Назв</Text>
-            <Text style={{width:'10%', borderRightWidth: 0.5,
-                borderRightColor: 'black', marginLeft:10, marginRight:5}}>ABS</Text>
-            <Text style={{width:'10%', borderRightWidth: 0.5,
-                borderRightColor: 'black', marginLeft:10, marginRight:5}}>Конц</Text>
-        </View>);*/
 
         for(var index = startIndex; index < startIndex + 5; index++){
 
             if(index < COValue) {
 
-
-                indexSTD = index.toString();
-                indexSTD = parseInt(indexSTD);
-                alert(indexSTD);
-                    component.push(<View
+                let IndexSTD = index+1;
+                component.push(<View
                     style={{flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: 'black',alignItems:'center',
-                        justifyContent:'center', height: 50}}>
-                    <Text style={{
-                        width: '30%', borderRightWidth: 0.5,
-                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
-                    }}>STD-{index+1}</Text>
-                    <Text style={{
-                        width: '30%', borderRightWidth: 0.5,
-                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
-                    }} onPress={() => this.setmodalVisibleNumber(true, '', 'abs', parseInt(indexSTD))}>{this.state.abs[parseInt(indexSTD)]}</Text>
-                    <Text style={{
-                        width: '30%', borderRightWidth: 0.5,
-                        borderRightColor: 'black', marginLeft: 10, marginRight: 5
-                    }} onPress={() => this.setmodalVisibleNumber(true, '', 'concentration', parseInt(indexSTD))}>{this.state.concentration[parseInt(indexSTD)]}</Text>
-                </View>);
+                        justifyContent:'center', height: 50}} key={IndexSTD.toString()}>
+                        <Text style={{
+                            width: '30%', borderRightWidth: 0.5,
+                            borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                        }}>STD-{IndexSTD}</Text>
+                        <Text style={{
+                            width: '30%', borderRightWidth: 0.5,
+                            borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                        }} onPress={() => this.setModalVisibleNumberForABS(true, IndexSTD.toString())}>{this.state.abs[IndexSTD]}</Text>
+                        <Text style={{
+                            width: '30%', borderRightWidth: 0.5,
+                            borderRightColor: 'black', marginLeft: 10, marginRight: 5
+                        }} onPress={() => this.setModalVisibleNumberForConcentration(true, IndexSTD.toString())}>{this.state.concentration[IndexSTD]}</Text>
+                </View>
+                );
+
+
             }
             else{
                 component.push(<View
-                    style={{flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: 'black',alignItems:'center',
-                        justifyContent:'center', height: 50}}>
+                        style={{flex: 1, flexDirection: 'row', borderBottomWidth: 0.5, borderBottomColor: 'black',alignItems:'center',
+                            justifyContent:'center', height: 50}}  key={(index).toString()}>
                     <Text style={{
                         width: '30%', borderRightWidth: 0.5,
                         borderRightColor: 'black', marginLeft: 10, marginRight: 5
@@ -360,16 +404,18 @@ export default class Graduation extends Component {
                         width: '30%', borderRightWidth: 0.5,
                         borderRightColor: 'black', marginLeft: 10, marginRight: 5
                     }}></Text>
-                </View>);
+                    </View>
+                );
             }
-
         }
 
         return component;
 
-
-
     }
+
+
+
+
 
 	render() {
 		
@@ -918,7 +964,35 @@ export default class Graduation extends Component {
                                     {this.TableViewEnterStandartSimple(5)}
                                 </View>
                             </View>
+
                         </Content>
+
+                        <Footer>
+                            <Left>
+                                <Button primary onPress={() => {this.setmodalVisibleEnterStandartSample(!this.state.modalVisibleEnterStandartSample)}}>
+                                    <Text>Назад</Text>
+
+
+
+                                </Button>
+                            </Left>
+                            <Body>
+                            <Button active primary onPress={() => {this.ChartABSConcentration()}}>
+
+                                <Text>Далее</Text>
+
+
+                            </Button>
+                            </Body>
+                            <Right>
+                                <Button info onPress={() => {this.props.navigation.goBack(null)}}>
+
+                                    <Text>Отмена</Text>
+
+                                </Button>
+                            </Right>
+
+                        </Footer>
 
                     </Modal>
 
