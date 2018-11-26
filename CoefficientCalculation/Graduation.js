@@ -7,11 +7,11 @@ import {  Grid, LineChart, XAxis, YAxis  } from 'react-native-svg-charts'
 import Orientation from 'react-native-orientation-locker';
 
 
-const data_ = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5];
+const data_ = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4];
 const axesSvg = { fontSize: 13, fill: 'black' };
 const verticalContentInset = { top: 10, bottom: 10 };
 const xAxisHeight = 20;
-
+var samplestandart_ = [];
 
 
 
@@ -22,7 +22,7 @@ export default class Graduation extends Component {
    		this.state = {
     	    approximation_type: "LIN",
             unit_type: '------------',
-            calibration_type: 'Std I',
+            calibration_type: 'Coe K',
             COValue: '------------',
             number: '0',
             k0: '------------',
@@ -35,18 +35,22 @@ export default class Graduation extends Component {
             modalVisibleEnterCoefficient: false,
             modalVisiblePlotCoefficients: false,
             modalVisibleEnterStandartSample: false,
+            modalVisiblePlotEnterStandartSample: false,
 
             coefficientK: '',
 
-            data: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5],
+            data: [],
             equation: 'С(А) = ',
 
-            concentration: {'1': 0.01, '2': 0.02, '3': 0.000, '4': 0.000, '5': 0.000, '6': 0.000,
+            concentration: {'1': 0.001, '2': 0.002, '3': 0.003, '4': 0.000, '5': 0.000, '6': 0.000,
                 '7': 0.000, '8': 0.000, '9': 0.000, '10': 0.000},
-            abs: {'1': 0.045, '2': 0.096, '3': 0, '4': 0.000, '5': 0.000, '6': 0.000,
+            abs: {'1': 0.045, '2': 0.096, '3': 1.0020, '4': 0.000, '5': 0.000, '6': 0.000,
                 '7': 0.000, '8': 0.000, '9': 0.000, '10': 0.000},
+            samplestandartABS: [],
+            samplestandartConcentration: [],
             variableABS: '',
             indexABS: '0',
+            r: '0',
 
            /// TableViewEnterStandartSimple: '<View><Text>Hello</Text></View>'
 
@@ -101,6 +105,10 @@ export default class Graduation extends Component {
     setmodalVisiblePlotCoefficients(visible){
         this.setState({modalVisiblePlotCoefficients: visible});
 
+    }
+
+    setmodalVisiblePlotEnterStandartSample(visible){
+        this.setState({modalVisiblePlotEnterStandartSample: visible});
     }
 
     setmodalVisibleEnterStandartSample(visible){
@@ -241,9 +249,10 @@ export default class Graduation extends Component {
         this.setmodalVisiblePlotCoefficients(true);
 
 
-        if(this.state.data.length > 11){
-            this.state.data.shift();
+        if(data_.length > 9){
+            data_.shift();
         }
+        this.state.data = [];
         theArray = this.state.data;
         equation = '';
 
@@ -253,16 +262,17 @@ export default class Graduation extends Component {
                 this.state.k1 = 0;
             }
 
+
+
             k1 = parseFloat(this.state.k1);
 
-            data_.forEach(function(element, index){
-
-               theArray[index] = parseFloat((data_[index] * k1).toFixed(2));
-                equation_ = 'С(А) = ' + k1 + ' * A';
 
 
+            for (var index = 0; index < data_.length; index++){
+                theArray.push(the.round(data_[index] * k1, 4));
+            }
 
-            });
+            equation_ = 'С(А) = ' + k1 + ' * A';
 
 
         }
@@ -276,12 +286,13 @@ export default class Graduation extends Component {
             k0 = parseFloat(this.state.k0);
             k1 = parseFloat(this.state.k1);
 
-            data_.forEach(function(element, index){
 
-                theArray[index] = parseFloat((k0 + data_[index] * k1).toFixed(2));
-                equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A';
 
-            });
+            for (var index = 0; index < data_.length; index++){
+                theArray.push(this.round(k0 + data_[index] * k1, 4));
+            }
+            equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A';
+
 
         }
         if(this.state.approximation_type == "SQU"){
@@ -298,58 +309,281 @@ export default class Graduation extends Component {
             k1 = parseFloat(this.state.k1);
             k2 = parseFloat(this.state.k2);
 
-            data_.forEach(function(element, index){
 
-                theArray[index] = parseFloat((k0 + data_[index] * k1 + k2 * data_[index] * data_[index]).toFixed(1));
-                equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A  + ' + k2 + ' * A^2';
 
-            });
+            for (var index = 0; index < data_.length; index++){
+                theArray.push(this.round(k0 + data_[index] * k1 + k2 * data_[index] * data_[index], 4));
+            }
+
+            equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A  + ' + k2 + ' * A^2';
         }
+
+
+
 
         this.setState({data: this.state.data = theArray});
         this.setState({equation: this.state.equation = equation_});
     }
+
+    round(value, decimals) {
+        return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    }
+
+    ChartEnterStandartSample() {
+
+        this.state.samplestandartABS = [];
+        this.state.samplestandartConcentration = [];
+        for (var key in this.state.abs){
+            if(parseInt(key, 10) - 1 < parseInt(this.state.COValue, 10)){
+                this.state.samplestandartABS[parseInt(key, 10) - 1] = this.state.abs[key];
+            }
+            else {
+                break;
+            }
+
+        }
+
+        var concentration = [];
+        var samplestandartABS = this.state.samplestandartABS;
+        equation = '';
+
+        if(samplestandartABS.indexOf(0) == -1){
+
+            samplestandartABS.unshift(0);
+        }
+
+        if(this.state.approximation_type == "LIN-0"){
+
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+
+            k1 = parseFloat(this.state.k1);
+
+
+
+            for (var index = 0; index < samplestandartABS.length; index++){
+                concentration.push(this.round(samplestandartABS[index] * k1, 4));
+            }
+
+            equation_ = 'С(А) = ' + k1 + ' * A';
+
+
+        }
+
+        if(this.state.approximation_type == "LIN") {
+
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+            if(this.state.k0 == '------------'){
+                this.state.k0 = 0;
+            }
+            k0 = this.state.k0;
+            k1 = this.state.k1;
+
+
+            for(var index = 0; index < samplestandartABS.length; index++){
+
+                concentration.push(k0 + samplestandartABS[index] * k1);
+
+            }
+            ///equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A';
+
+            equation_ = 'С(А) = ' + k0 + ' ';
+            if(Math.sign(k1) != -1 || Math.sign(k1) != -0){
+                equation_ += '+ ' + k1 + ' * A';
+            }
+            else{
+                k1 = k1 * (-1);
+                equation_ += '-' + k1 + ' * A';
+            }
+
+
+        }
+
+        if(this.state.approximation_type == "SQU"){
+            if(this.state.k1 == '------------'){
+                this.state.k1 = 0;
+            }
+            if(this.state.k0 == '------------'){
+                this.state.k0 = 0;
+            }
+            if(this.state.k2 == '------------'){
+                this.state.k2 = 0;
+            }
+            k0 = parseFloat(this.state.k0);
+            k1 = parseFloat(this.state.k1);
+            k2 = parseFloat(this.state.k2);
+
+
+
+            for (var index = 0; index < samplestandartABS.length; index++){
+                concentration.push(this.round(k0 + samplestandartABS[index] * k1 + k2 * samplestandartABS[index] * samplestandartABS[index], 4));
+            }
+
+            //equation_ = 'С(А) = ' + k0 + ' + ' + k1 + ' * A  + ' + k2 + ' * A^2';
+            equation_ = 'С(А) = ' + k0 + ' ';
+            if(Math.sign(k1) != -1 || Math.sign(k1) != -0){
+                equation_ += '+ ' + k1 + ' * A';
+            }
+            else{
+                k1 = k1 * (-1);
+                equation_ += ' -' + k1 + ' * A ';
+            }
+
+            if(Math.sign(k2) != -1 || Math.sign(k2) != -0){
+                equation_ += k2 + ' * A^2';
+            }
+            else{
+                k2 = k2 * (-1);
+                equation_ += ' -' + k2 + ' * A^2';
+            }
+        }
+
+
+        this.setState({samplestandartConcentration: concentration});
+        this.setState({samplestandartABS: samplestandartABS});
+        this.setState({equation: this.state.equation = equation_});
+        //alert(this.state.samplestandartABS);
+
+        this.setmodalVisiblePlotEnterStandartSample(true);
+    }
+
+    round(value, decimals) {
+        return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+    }
+
+
     LinearThroughZero(){
         XY = parseFloat(0); SUMMY2 = parseFloat(0);
+        let y2 = parseFloat(0);
+        let x2 = parseFloat(0);
+        let SUMMX = parseFloat(0);
         for(var index = 0; index < parseInt(this.state.COValue, 10); index++){
 
             XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
-            SUMMY2 += parseFloat(this.state.concentration[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+            SUMMY2 += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.abs[(index+1).toString()]);
+            SUMMX += parseFloat(this.state.concentration[(index+1).toString()]);
         }
-        this.state.k1 = XY / SUMMY2;
 
-        alert(this.state.k1);
+
+        let SREDSUMM = parseFloat(SUMMX / parseInt(this.state.COValue, 10));
+
+
+        this.state.k1 = this.round(XY / SUMMY2, 4);
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++) {
+            y2 = Math.pow(parseFloat(this.state.concentration[(index + 1).toString()])-
+                this.state.k1 * parseFloat(this.state.abs[(index + 1).toString()]), 2);
+            x2 += Math.pow(parseFloat(this.state.concentration[(index + 1).toString()] - SREDSUMM), 2);
+        }
+        this.state.r = this.round(1 - (y2/x2),4)
+
+        //alert(this.state.k1);
     }
 
     Linear(){
-        XY = parseFloat(0); SUMMY2 = parseFloat(0); SUMMY = parseFloat(0); SUMMX = parseFloat(0);
-        x = 0, y = 0;
+        let XY = parseFloat(0); let SUMMY2 = parseFloat(0); let SUMMY = parseFloat(0); let SUMMX = parseFloat(0);
+        let y2 = parseFloat(0);
+        let x2 = parseFloat(0);
+        let SREDSUMM = parseFloat(0);
+
         for(var index = 0; index < parseInt(this.state.COValue, 10); index++){
 
+            SUMMX += parseFloat(this.state.concentration[(index+1).toString()]);
+            SUMMY += parseFloat(this.state.abs[(index+1).toString()]);
+            SUMMY2 += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.abs[(index+1).toString()]);
+            XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+
+        }
+        SREDSUMM = parseFloat(SUMMX / parseInt(this.state.COValue, 10));
+
+
+        this.state.k0 = this.round((SUMMY2 * SUMMX - SUMMY * XY) / (parseInt(this.state.COValue, 10) * SUMMY2 - SUMMY * SUMMY), 4);
+        this.state.k1 = this.round((parseInt(this.state.COValue, 10) * XY - SUMMY * SUMMX) / (parseInt(this.state.COValue, 10) * SUMMY2 - SUMMY * SUMMY), 4);
+
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++) {
+            y2 += Math.pow(parseFloat(this.state.concentration[(index + 1).toString()]) - (
+                this.state.k1 * parseFloat(this.state.abs[(index + 1).toString()]) + this.state.k0), 2);
+            x2 += Math.pow(parseFloat(this.state.concentration[(index + 1).toString()] - SREDSUMM), 2);
+        }
+        this.state.r = this.round(1 - (y2/x2),4)
+        //alert('k1 = ' + this.state.k1 +  ' k0 = '+ this.state.k0);
+    }
+
+    SQU(){
+
+        let XY = parseFloat(0); let SUMMY = parseFloat(0); let SUMMX = parseFloat(0);
+        let x2 = 0; let x3 = 0; let x4 = 0; let x2y = 0;
+        let y2 = parseFloat(0);
+        let xto2 = parseFloat(0);
+        let SREDSUMM = parseFloat(0);
+
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++){
+            x2 += Math.pow(parseFloat(this.state.abs[(index+1).toString()]), 2);
+            x3 += Math.pow(parseFloat(this.state.abs[(index+1).toString()]), 3);
+            x4 += Math.pow(parseFloat(this.state.abs[(index+1).toString()]), 4)
+
+            XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
             SUMMX += parseFloat(this.state.abs[(index+1).toString()]);
             SUMMY += parseFloat(this.state.concentration[(index+1).toString()]);
-            SUMMY2 += parseFloat(this.state.concentration[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
-            XY += parseFloat(this.state.abs[(index+1).toString()]) * parseFloat(this.state.concentration[(index+1).toString()]);
+
+            x2y += Math.pow(parseFloat(this.state.abs[(index+1).toString()]), 2) * parseFloat(this.state.concentration[(index+1).toString()]);
         }
 
-        this.state.k0 = (SUMMY2 * SUMMX - SUMMY * XY) / (SUMMY2 - SUMMY * SUMMY);
-        this.state.k1 = (XY - SUMMY * SUMMX) / (SUMMY2 - SUMMY * SUMMY);
+        SREDSUMM = parseFloat(SUMMX / parseInt(this.state.COValue, 10));
 
-        alert('k1 = ' + this.state.k1 +  ' k0 = '+ this.state.k0);
+
+        let NoCaSer = parseInt(this.state.COValue, 10);
+
+        let Opred = Math.pow(x2, 3) + Math.pow(SUMMX, 2) * x4 + NoCaSer * Math.pow(x3, 2) - NoCaSer * x2 * x4 - x2 * SUMMX * x3 - SUMMX * x3 * x2;
+        let OpredA = SUMMY * Math.pow(x2, 2) + Math.pow(SUMMX, 2) * x2y + NoCaSer * XY * x3 - NoCaSer * x2 * x2y - SUMMY * SUMMX * x3 - SUMMX * XY * x2;
+        let OpredB =  Math.pow(x2, 2) * XY + SUMMY * SUMMX * x4 + NoCaSer * x3 * x2y - NoCaSer * XY * x4 - x2 * SUMMX * x2y - SUMMY * x3 * x2;
+        let OpredC = Math.pow(x2, 2) * x2y + SUMMX * XY * x4 + SUMMY * Math.pow(x3, 2) - SUMMY * x2 * x4 - x2 * XY * x3 - SUMMX * x3 * x2y  ;
+
+        this.state.k0 = this.round(OpredC / Opred, 4);
+        this.state.k1 = this.round(OpredB / Opred, 4);
+        this.state.k2 = this.round(OpredA / Opred, 4);
+
+
+        for(var index = 0; index < parseInt(this.state.COValue, 10); index++) {
+            y2 += Math.pow(parseFloat(this.state.concentration[(index + 1).toString()]) - (
+                this.state.k1 * parseFloat(this.state.abs[(index + 1).toString()]) + this.state.k0 +
+                this.state.k2 * Math.pow(parseFloat(this.state.abs[(index + 1).toString()]), 2)), 2);
+            xto2 += Math.pow(parseFloat(this.state.concentration[(index + 1).toString()] - SREDSUMM), 2);
+        }
+
+        this.state.r = this.round(1 - (y2/xto2),4)
+
+        //alert('k1 = ' + this.state.k1 +  ' k0 = '+ this.state.k0 + ' k2 = ' + this.state.k2);
+
     }
 
     ChartABSConcentration() {
 
-        alert(this.state.approximation_type);
+        //alert(this.state.approximation_type);
+
+        //this.setmodalVisibleEnterStandartSample(!this.state.modalVisibleEnterStandartSample);
+        //this.setmodalVisiblePlotEnterStandartSample(!this.state.modalVisiblePlotEnterStandartSample);
 
         if(this.state.approximation_type == "LIN-0") {
 
             this.LinearThroughZero();
+            this.ChartEnterStandartSample();
         }
         if(this.state.approximation_type == "LIN") {
 
             this.Linear();
+            this.ChartEnterStandartSample();
         }
+
+        if(this.state.approximation_type == "SQU") {
+
+            this.SQU();
+            this.ChartEnterStandartSample();
+        }
+
+
     }
 
 
@@ -693,7 +927,7 @@ export default class Graduation extends Component {
 
                     </Modal>
 
-                    {/*Экран завршения работы в режиме коэффициенты (Построение графика и вывод итоговой информации*/}
+                    {/*Экран завершения работы в режиме коэффициенты (Построение графика и вывод итоговой информации*/}
 
                     <Modal
                         animationType="slide"
@@ -708,16 +942,13 @@ export default class Graduation extends Component {
                         <Content>
                             <View style={{flex:1, flexDirection: 'row'}}>
 
-                                <View style={{ height: 250, width: '70%', marginBottom:20, marginTop:20, flexDirection: 'row' , marginLeft: 5}}>
+                                <View style={{ minHeight: 150, maxHeight: 250, minWidth: '55%', Width: '70%', marginBottom:20, marginTop:20, flexDirection: 'row' , marginLeft: 5}}>
                                     <YAxis
                                         data={this.state.data}
-
+                                        formatLabel={(value, index) => value}
                                         style={{ marginBottom: xAxisHeight }}
                                         contentInset={verticalContentInset}
-                                        formatLabel={(value, index) => data_[index]
-
-
-                                        }
+                                        numberOfTicks={data_.length}
                                         svg={axesSvg}/>
                                     <View style={{ flex: 1, marginLeft: 10 }}>
                                         <LineChart
@@ -732,23 +963,23 @@ export default class Graduation extends Component {
                                         </LineChart>
                                         <XAxis
                                             style={{ marginHorizontal: -10, height: xAxisHeight }}
-                                            data={data_}
-                                            formatLabel={(value, index) => this.state.data[index]}
+                                            data={this.state.data}
+                                            formatLabel={(value, index) => data_[index]}
                                             contentInset={{ left: 10, right: 10 }}
                                             svg={axesSvg}/>
                                     </View>
                                 </View>
                                 <View style={{borderLeftWidth: 0.5,
-                                    borderTopColor: 'black', marginLeft:20}}>
+                                    borderTopColor: 'black', marginLeft:20, fontSize:13}}>
 
                                     <View style={{flex:1, flexDirection: 'row', height:5, marginLeft:10}}>
                                         <View style={{width:'30%'}}>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 Ед.и:
                                             </Text>
                                         </View>
                                         <View>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 {this.state.unit_type}
                                             </Text>
                                         </View>
@@ -756,12 +987,12 @@ export default class Graduation extends Component {
                                     <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
                                         borderTopColor: 'black', height:5, marginLeft:10}}>
                                         <View style={{width:'30%'}}>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 Кали:
                                             </Text>
                                         </View>
                                         <View>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 {this.state.approximation_type}
                                             </Text>
                                         </View>
@@ -770,12 +1001,12 @@ export default class Graduation extends Component {
                                     <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
                                         borderTopColor: 'black', height:5, marginLeft:10}}>
                                         <View style={{width:'30%'}}>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 Кол СО:
                                             </Text>
                                         </View>
                                         <View>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 {this.state.COValue}
                                             </Text>
                                         </View>
@@ -785,7 +1016,7 @@ export default class Graduation extends Component {
                                         borderTopColor: 'black', height:5, marginLeft:10}}>
 
                                         <View>
-                                            <Text>
+                                            <Text style={{fontSize: 13}}>
                                                 {this.state.equation}
                                             </Text>
                                         </View>
@@ -842,7 +1073,7 @@ export default class Graduation extends Component {
                             </TouchableHighlight>
                             <TouchableHighlight
                                 onPress={() => {
-                                    if (this.state.approximation_type == 'LIN') {
+                                    if (this.state.approximation_type == 'LIN' || this.state.approximation_type == 'SQU') {
                                         this.setmodalVisibleNumber(true, 'k0');
                                     }
                                 }}>
@@ -879,6 +1110,130 @@ export default class Graduation extends Component {
                             </Right>
                         </Footer>
 
+                    </Modal>
+
+
+                    {/*Экран завершения работы в режиме ввода стандартных образцов (Построение графика и вывод итоговой информации*/}
+
+                    <Modal
+                        animationType="slide"
+                        transparent={false}
+                        visible={this.state.modalVisiblePlotEnterStandartSample}
+                        onRequestClose={() => {
+
+                            this.setmodalVisiblePlotEnterStandartSample(!this.state.modalVisiblePlotEnterStandartSample);
+                        }}
+                        >
+
+                        <Header><Body><Title>Завершение</Title></Body></Header>
+                        <Content>
+
+                            <View style={{flex:1, flexDirection: 'row', }}>
+                                <View style={{minHeight: 150, maxHeight: 250, minWidth: '55%', Width: '70%', marginBottom:20, marginTop:20, flexDirection: 'row' , marginLeft: 5}}>
+                                    <YAxis
+                                        data={this.state.samplestandartConcentration}
+                                        ///yScale={0.1}
+                                        style={{ marginBottom: xAxisHeight }}
+                                        contentInset={verticalContentInset}
+                                        numberOfTicks={ parseInt(this.state.COValue, 10) }
+                                        formatLabel={(value, index) => value}
+                                        svg={axesSvg}/>
+                                    <View style={{ flex: 1, marginLeft: 10 }}>
+                                        <LineChart
+                                            style={{ flex: 1 }}
+                                            data={this.state.samplestandartConcentration}
+                                            ///dashArray={[5,5]}
+                                            contentInset={verticalContentInset}
+                                            svg={{ stroke: 'rgb(134, 65, 244)' }}
+
+                                        >
+                                            <Grid showGrid={true}
+                                                  numberOfTicks={30}/>
+                                        </LineChart>
+                                        <XAxis
+                                            style={{ marginHorizontal: -10, height: xAxisHeight }}
+                                            data={this.state.samplestandartConcentration}
+                                            formatLabel={(value, index) => this.state.samplestandartABS[index]}
+                                            contentInset={{ left: 10, right: 10 }}
+                                            svg={axesSvg}/>
+                                    </View>
+
+                                </View>
+                                <View style={{borderLeftWidth: 0.5,
+                                    borderTopColor: 'black', marginLeft:20, fontSize: 13}}>
+
+                                    <View style={{flex:1, flexDirection: 'row', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%', fontSize: 13}}>
+                                            <Text style={{fontSize: 13}}>
+                                                Ед.и:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={{fontSize: 13}}>
+                                                {this.state.unit_type}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text style={{fontSize: 13}}>
+                                                Кали:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={{fontSize: 13}}>
+                                                {this.state.approximation_type}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text style={{fontSize: 13}}>
+                                                Кол СО:
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={{fontSize: 13}}>
+                                                {this.state.COValue}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+
+                                        <View>
+                                            <Text style={{fontSize: 13}}>
+                                                {this.state.equation}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={{flex:1, flexDirection: 'row', borderTopWidth: 0.5,
+                                        borderTopColor: 'black', height:5, marginLeft:10}}>
+                                        <View style={{width:'30%'}}>
+                                            <Text style={{fontSize: 13}}>
+                                                r =
+                                            </Text>
+                                        </View>
+                                        <View>
+                                            <Text style={{fontSize: 13}}>
+                                                {this.state.r}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                </View>
+                            </View>
+
+                        </Content>
+                        <Footer>
+                            <Right>
+                                <Button info onPress={() => {this.props.navigation.goBack(null)}}><Text>Завершение</Text></Button>
+                            </Right>
+                        </Footer>
                     </Modal>
 
                     {/*Экран ввода стандартныз образцов*/}
