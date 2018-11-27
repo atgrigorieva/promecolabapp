@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
+    "@cycle/react-native": "^1.4.0",
     "@expo/vector-icons": "^8.0.0",
     "mjml": "^4.2.0",
     "native-base": "^2.8.1",

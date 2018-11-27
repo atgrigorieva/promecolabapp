@@ -67,6 +67,9 @@ export default class HomePage extends Component {
 						<Button block style={styles.button} onPress={() => this.props.navigation.navigate('Расчет по коэффициентам')}>
 							<Text>Рассчет по коэффициентам</Text>							
 						</Button>
+                        <Button block style={styles.button} onPress={() => this.props.navigation.navigate('Обучающие презентации')}>
+                            <Text>Обучающие презентации</Text>
+                        </Button>
 					</View>
 					
 				
