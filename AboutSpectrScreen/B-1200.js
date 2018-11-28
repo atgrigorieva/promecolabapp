@@ -34,13 +34,13 @@ callFunc(){
           				</Button>
         			</Left>
         			<Body>
-          				<Title>В-1100</Title>
+          				<Title>В-1200</Title>
         			</Body>
         			<Right />
       			</Header>
 				<Content padder >
 					<View style={styles.spectr_image}>	
-						<Image source={require('../img/B1100/B-1100_201x170.png')} style={styles.image}/>
+						<Image source={require('../img/B1200/YF-1800_200.png')} style={styles.image}/>
 					</View>
 
           
@@ -142,7 +142,7 @@ callFunc(){
                             <Text>Габаритные размеры (ДxШxВ), мм</Text>
                         </View>
                         <View style={{borderRightWidth: 1, borderRightColor: 'black', width:'30%', verticalAlign:'middle',}}>
-                            <Text style={{textAlign: 'center'}}>450×360×160</Text>
+                            <Text style={{textAlign: 'center'}}>490×360×210</Text>
                         </View>
                     </View>
                     <View style={{flex:1, flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'black'}}>
@@ -151,7 +151,7 @@ callFunc(){
                             <Text>Масса, кг, не более</Text>
                         </View>
                         <View style={{borderRightWidth: 1, borderRightColor: 'black', width:'30%', verticalAlign:'middle',}}>
-                            <Text style={{textAlign: 'center'}}>8</Text>
+                            <Text style={{textAlign: 'center'}}>10</Text>
                         </View>
                     </View>
                     <View style={{flex:1, flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'black'}}>
@@ -233,6 +233,7 @@ callFunc(){
                       <Text style={{fontWeight: 'bold', fontSize:15, fontFamily: 'Arial'}}>Можно приобрести отдельно:</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900140 Перистальтический насос с держателем для проточных кювет</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 909103 Приставка диффузного отражения</Text>
+                      <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 920920 Принтер матричный</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900440 Держатель для 3 кювет КФК до 100 мм</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900410 Держатель для 4 евро кювет до 10 мм.</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900420 Держатель для 4 евро кювет до 50 мм.</Text>
@@ -246,7 +247,7 @@ callFunc(){
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900550 Держатель для 2 пленок 1,5-3 мм</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 900441 Заглушка</Text>
                       <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 909001 Чехол от пыли для 1100/1200/1800</Text>
-                      <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 911634 Лампа галогенная 6В 10Вт</Text>
+                      <Text style={{fontSize:15, fontFamily: 'Arial'}}>    • 911634 Лампа галогенная 12В 20Вт</Text>
                   </View>
              
               </Tab>

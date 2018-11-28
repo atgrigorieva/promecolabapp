@@ -36,14 +36,23 @@ export default class AboutSpectrScreen extends Component {
 						onPress={() => this.props.navigation.navigate('B1100')}>
 						<Text>В-1100</Text>
 					</Button>
-					<Button block light style={styles.button}><Text>УФ-1100</Text></Button>
-					<Button block light style={styles.button}><Text>В-1200</Text></Button>
-					<Button block light style={styles.button}><Text>Уф-1200</Text></Button>
-					<Button block light style={styles.button}><Text>УФ-1800</Text></Button>
-					<Button block light style={styles.button}><Text>УФ-3000</Text></Button>
-					<Button block light style={styles.button}><Text>УФ-3100</Text></Button>
-					<Button block light style={styles.button}><Text>УФ-3200</Text></Button>
-					<Button block light style={styles.button}><Text>УФ-6100</Text></Button>
+					<Button block light style={styles.button}
+                            block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF1100')}><Text>УФ-1100</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('1200')}><Text>В-1200</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF1200')}><Text>Уф-1200</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF1800')}><Text>УФ-1800</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF3000')}><Text>УФ-3000</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF3100')}><Text>УФ-3100</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF3200')}><Text>УФ-3200</Text></Button>
+					<Button block light style={styles.button}
+                            onPress={() => this.props.navigation.navigate('YF6100')}><Text>УФ-6100</Text></Button>
 								
 				
 					

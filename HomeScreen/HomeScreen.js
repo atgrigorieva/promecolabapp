@@ -32,20 +32,17 @@ export default class HomePage extends Component {
 
 			
 			<Container>
-				<Header style={styles.header}>
-         			
-          			<Body>
-          				<Image
-                         	style={styles.image}
-                         	source={require('../logo/LOGO_360.png')} />		
-                    </Body>
-          			
-         		
-        		</Header>
+
 				
-				<Content padder >	
-				
-				
+				<Content padder >
+
+                    <View style={{borderBottomWidth: 0.5,
+                        borderBottomColor: 'black', height: '18%'}}>
+
+                        <Image
+                            style={styles.image}
+                            source={require('../logo/LOGO_360.png')} />
+                    </View>
 			
 					
 					<View style={styles.buttonMenu}>
@@ -94,34 +91,30 @@ var styles = StyleSheet.create({
 	},
 	
 	image: {
-		width: 360, 
-		height: 76,
 		marginLeft:'auto',
 		marginRight:'auto',
+        marginTop: '1%',
+        marginBottom: '10%',
+
   },
   
     buttonMenu: {
-		flex: 5,
+	    flex:5,
         flexDirection: 'column',
         alignItems: 'flex-start', //replace with flex-end or center
 		marginBottom: 10,
 
+        marginTop:'20%'
 		
 	},
 	
 	button: {
-		marginTop: 10,
+        marginTop: 10,
 		backgroundColor: '#2079BD',
 		fontFamily: 'Arial',
 		
 	},
 
-	header: {
-		height:'40%',
-		backgroundColor: '#fff',
-        borderBottomWidth: 0,
 
-	},
-	
 });
 
