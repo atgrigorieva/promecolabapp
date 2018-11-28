@@ -15,7 +15,7 @@ export default class AutomaticHolderPage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Инициализация системы. Автоматический держатель</Title>
+                    <Title>Включение Спектрофотометра В-1200. Инициализация системы</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -25,6 +25,13 @@ export default class AutomaticHolderPage extends Component {
                                 <View style={{
                                     width: "40%"
                                 }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                        fontWeight: 'bold',
+                                    }}>
+                                        3. Автоматический держатель
+                                    </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10

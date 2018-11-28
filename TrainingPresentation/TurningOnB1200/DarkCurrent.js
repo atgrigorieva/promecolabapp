@@ -4,7 +4,7 @@ import { View, Image, StyleSheet,} from 'react-native';
 import { createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
-export default class InspectionOfDevicePage extends Component {
+export default class LampsPage extends Component {
 
     componentDidMount(){
         Orientation.lockToLandscape();
@@ -15,7 +15,7 @@ export default class InspectionOfDevicePage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Осмотр прибора</Title>
+                    <Title>Включение Спектрофотометра В-1200. Инициализация системы</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -25,30 +25,48 @@ export default class InspectionOfDevicePage extends Component {
                                 <View style={{
                                     width: "40%"
                                 }}>
+
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                        fontStyle: 'italic',
+                                    }}>
+                                        После прогева продолжиться самотестирование и коллибровка прибора.
+                                    </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10,
                                         fontWeight: 'bold',
                                     }}>
-                                        Шаг 3.
+                                        4. Темновой ток.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        После осмотра можно подключать спектрофотометр к сети электропитания.
+                                        Сбрасывается засветка с фотодетектора для повышения точности.
                                     </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}>
+                                        Если будет выявлена неисправность детектора, то самотестирование прервется.
+                                        Обратитесь к специалисту.
+                                    </Text>
+
+
+
                                 </View>
-                                <View>
+                                <View style={{marginLeft: 20}}>
                                     <Image
-                                        source={require('../../img/B1200/B1200.png')}/>
+                                        source={require('../../img/B1200/v-1200_2_OK_3.png')}/>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('PowerConnection')}><Text>Повернуть прибор</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('Wavelength')}><Text>Длина волны</Text></Button></Left>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>
@@ -58,6 +76,12 @@ export default class InspectionOfDevicePage extends Component {
 
 var styles = StyleSheet.create({
 
+    italicText: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontStyle: 'italic',
+        color: '#ff6600',
+    }
 
 
 });

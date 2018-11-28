@@ -28,7 +28,8 @@ export default class NextPage extends Component {
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10,
-                                        color: '#ff0000'
+                                        color: '#ff0000',
+                                        fontWeight: 'bold'
                                     }}>
                                         ВНИМАНИЕ
                                     </Text>
@@ -37,7 +38,14 @@ export default class NextPage extends Component {
                                         marginBottom: 10
                                     }}>
                                         1. Перед дальнейшим ознакомление запомните: «ДИСПЛЕЙ СЕНСОРНЫЙ!!!
-                                        (как на смарфоне)».
+                                        <Text style={{
+                                            fontSize:15,
+                                            marginBottom: 10,
+                                            color: '#ff0000',
+                                            fontStyle: 'italic',
+                                            fontWeight: 'bold'
+
+                                        }}> (как на смарфоне)</Text>».
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
@@ -45,16 +53,36 @@ export default class NextPage extends Component {
                                     }}>
                                         Его нужно нажимать:
 
-                                        пальцем,
-                                        стилусом,
-                                        пальцем в перчатке,
-                                        тупым концом ручки и карандаша,
-                                        ручкой в колпачке или с убранным стержнем.
+                                    </Text>
+
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}> • пальцем,
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
+                                        marginBottom: 10
+                                    }}> • стилусом,</Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}> • пальцем в перчатке,</Text>
+                                        <Text style={{
+                                            fontSize:15,
+                                            marginBottom: 10
+                                        }}> • тупым концом ручки и карандаша,</Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}> • ручкой в колпачке или с убранным стержнем.</Text>
+
+                                    <Text style={{
+                                        fontSize:15,
                                         marginBottom: 10,
-                                        color: '#ff0000'
+                                        color: '#ff0000',
+                                        fontWeight: 'bold'
+
                                     }}>
                                         Его нельзя нажимать острыми предметами!
                                     </Text>
@@ -76,7 +104,7 @@ export default class NextPage extends Component {
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('Pass')}><Text>Пропустить</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('Remembered')}><Text>Я запомнил (а)</Text></Button></Left>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>

@@ -15,7 +15,7 @@ export default class InspectionOfDevicePage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Подключение к сети. Шаг 6</Title>
+                    <Title>Включение Спектрофотометра В-1200. Подключение к сети</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -25,6 +25,13 @@ export default class InspectionOfDevicePage extends Component {
                                 <View style={{
                                     width: "40%"
                                 }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                        fontWeight: 'bold',
+                                    }}>
+                                        Шаг 6.
+                                    </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10

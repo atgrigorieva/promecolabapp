@@ -4,7 +4,7 @@ import { View, Image, StyleSheet,} from 'react-native';
 import { createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
-export default class NextPage extends Component {
+export default class LampsPage extends Component {
 
     componentDidMount(){
         Orientation.lockToLandscape();
@@ -27,51 +27,53 @@ export default class NextPage extends Component {
                                 }}>
                                     <Text style={{
                                         fontSize:15,
-                                        marginBottom: 10
+                                        marginBottom: 10,
+                                        fontWeight: 'bold',
                                     }}>
-                                        Перед тем как система самотестирования проверит точность установки длины волны
-                                        и фотометрические характеристики прибору необходимо прогреться.
+                                        5. Длина волны.
+                                    </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                    }}>
+                                        Проводится самкалибровка(юстировка) монохроматора.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Время полного прогрева занимает 20 минут
+                                        Монохроматор при помощи точной механики приводится в запрограммированную точку,
+                                        которая соответствует эталонной длине волны, заложенной в память прибора
+                                        при производстве.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Рекомендуем дождаться окончания прогрева.
-                                        После окончания прибор автоматически вернется в режим самотестирования
-                                        и самокалибровки.
+                                        Эта система позволяет отказаться от контрольных светофильтров
+                                        для проверки точности установки длины волны.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Если пропустить Прогрев, самокалибровка может пройти с увеличенной погрешностью,
-                                        это может сказаться на точности измерений.
+                                        Если в работе монохроматора выявлены ошибки, процесс самотестирования прервется.
+                                        Перезапустите прибор. Если ошибка повторится, обратитесь к специалисту.
                                     </Text>
-                                    <Text style={{
-                                        fontSize:15,
-                                        marginBottom: 10
-                                    }}>
-                                        Для продолжения нажмите кнопку Пропустить.
-                                    </Text>
+
 
 
                                 </View>
                                 <View style={{marginLeft: 20}}>
                                     <Image
-                                        source={require('../../img/B1200/display1.png')}/>
+                                        source={require('../../img/B1200/v-1200_2_OK_4.png')}/>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('Pass')}><Text>Пропустить</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('Energy')}><Text>Энергия</Text></Button></Left>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>

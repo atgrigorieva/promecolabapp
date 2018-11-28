@@ -27,39 +27,40 @@ export default class NextPage extends Component {
                                 }}>
                                     <Text style={{
                                         fontSize:15,
-                                        marginBottom: 10
+                                        marginBottom: 10,
+                                        color: '#ff0000',
+                                        fontWeight: 'bold'
                                     }}>
-                                        Перед тем как система самотестирования проверит точность установки длины волны
-                                        и фотометрические характеристики прибору необходимо прогреться.
+                                        ВНИМАНИЕ
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Время полного прогрева занимает 20 минут
-                                    </Text>
-                                    <Text style={{
-                                        fontSize:15,
-                                        marginBottom: 10
-                                    }}>
-                                        Рекомендуем дождаться окончания прогрева.
-                                        После окончания прибор автоматически вернется в режим самотестирования
-                                        и самокалибровки.
-                                    </Text>
-                                    <Text style={{
-                                        fontSize:15,
-                                        marginBottom: 10
-                                    }}>
-                                        Если пропустить Прогрев, самокалибровка может пройти с увеличенной погрешностью,
-                                        это может сказаться на точности измерений.
-                                    </Text>
-                                    <Text style={{
-                                        fontSize:15,
-                                        marginBottom: 10
-                                    }}>
-                                        Для продолжения нажмите кнопку Пропустить.
-                                    </Text>
+                                        1. Перед дальнейшим ознакомление запомните: «ДИСПЛЕЙ СЕНСОРНЫЙ!!!
+                                        <Text style={{
+                                            fontSize:15,
+                                            marginBottom: 10,
+                                            color: '#ff0000',
+                                            fontStyle: 'italic',
+                                            fontWeight: 'bold'
 
+                                        }}> (как на смарфоне)</Text>».
+                                    </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}>
+                                        2. Нажимать нужно без излишнего усилия!
+                                        Сенсор срабатывает на прикосновение, а не на нажатие!
+                                    </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}>
+                                        3. Нажимать нужно на ПИКТОГРАММЫ, НАДПИСИ И ОБЛАСТИ на дисплее.
+                                        Подробнее об этом можно узнать в других интерактивных презентациях.
+                                    </Text>
 
                                 </View>
                                 <View style={{marginLeft: 20}}>
@@ -71,7 +72,7 @@ export default class NextPage extends Component {
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('Pass')}><Text>Пропустить</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('DarkCurrent')}><Text>Темновой ток</Text></Button></Left>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>

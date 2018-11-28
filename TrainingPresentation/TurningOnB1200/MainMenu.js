@@ -4,7 +4,7 @@ import { View, Image, StyleSheet,} from 'react-native';
 import { createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
-export default class NextPage extends Component {
+export default class LampsPage extends Component {
 
     componentDidMount(){
         Orientation.lockToLandscape();
@@ -15,7 +15,7 @@ export default class NextPage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Инициализация системы</Title>
+                    <Title>Включение Спектрофотометра В-1200. Главное меню.</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -27,51 +27,51 @@ export default class NextPage extends Component {
                                 }}>
                                     <Text style={{
                                         fontSize:15,
-                                        marginBottom: 10
+                                        marginBottom: 10,
                                     }}>
-                                        Перед тем как система самотестирования проверит точность установки длины волны
-                                        и фотометрические характеристики прибору необходимо прогреться.
+                                        После завершения прогрева, самодиагностики и самокалибровки
+                                        прибор автоматически перейдет в Главное меню.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Время полного прогрева занимает 20 минут
+                                        Теперь прибор готов к работе.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Рекомендуем дождаться окончания прогрева.
-                                        После окончания прибор автоматически вернется в режим самотестирования
-                                        и самокалибровки.
+                                        Режимы работы будут рассмотрены в других Интерактивных презентациях.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Если пропустить Прогрев, самокалибровка может пройти с увеличенной погрешностью,
-                                        это может сказаться на точности измерений.
+                                        Если функции системы самодиагностики и самокалибровки понятны, нажмите "Продолжить".
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        Для продолжения нажмите кнопку Пропустить.
+                                        Если остались неясности, можно посмотреть слайд еще раз.
                                     </Text>
+
+
 
 
                                 </View>
                                 <View style={{marginLeft: 20}}>
                                     <Image
-                                        source={require('../../img/B1200/display1.png')}/>
+                                        source={require('../../img/B1200/display2.png')}/>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('Pass')}><Text>Пропустить</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('NextPage3')}><Text>Продолжить</Text></Button></Left>
+                    <Body><Button onPress={() => this.props.navigation.navigate('NextPage1')}><Text>Повторить</Text></Button></Body>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>

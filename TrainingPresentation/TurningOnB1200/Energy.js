@@ -4,7 +4,7 @@ import { View, Image, StyleSheet,} from 'react-native';
 import { createStackNavigator, StackActions, NavigationActions } from 'react-navigation';
 import Orientation from 'react-native-orientation-locker';
 
-export default class InspectionOfDevicePage extends Component {
+export default class LampsPage extends Component {
 
     componentDidMount(){
         Orientation.lockToLandscape();
@@ -15,7 +15,7 @@ export default class InspectionOfDevicePage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Осмотр прибора</Title>
+                    <Title>Включение Спектрофотометра В-1200. Инициализация системы</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -30,25 +30,43 @@ export default class InspectionOfDevicePage extends Component {
                                         marginBottom: 10,
                                         fontWeight: 'bold',
                                     }}>
-                                        Шаг 3.
+                                        6. Энергия.
+                                    </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                    }}>
+                                        Проверяется работоспособность и точность фотодетектора.
                                     </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10
                                     }}>
-                                        После осмотра можно подключать спектрофотометр к сети электропитания.
+                                        Для этого на эталонной длине волны измеряется сколько энергии подано
+                                        на источник света и сколько энергии уловил фотоприемник.
                                     </Text>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10
+                                    }}>
+                                        Если уровень потери энергии выше чем критический,
+                                        процесс самотестирования прервется. Обратитесь к специалисту.
+                                    </Text>
+
+
+
+
                                 </View>
-                                <View>
+                                <View style={{marginLeft: 20}}>
                                     <Image
-                                        source={require('../../img/B1200/B1200.png')}/>
+                                        source={require('../../img/B1200/v-1200_2_OK_5.png')}/>
                                 </View>
                             </View>
                         </View>
                     </View>
                 </Content>
                 <Footer>
-                    <Left><Button onPress={() => this.props.navigation.navigate('PowerConnection')}><Text>Повернуть прибор</Text></Button></Left>
+                    <Left><Button onPress={() => this.props.navigation.navigate('MainMenu')}><Text>Главное меню</Text></Button></Left>
                     <Right><Button onPress={() => this.props.navigation.goBack(null)}><Text>К списку презентаций</Text></Button></Right>
                 </Footer>
             </Container>
@@ -58,6 +76,12 @@ export default class InspectionOfDevicePage extends Component {
 
 var styles = StyleSheet.create({
 
+    italicText: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontStyle: 'italic',
+        color: '#ff6600',
+    }
 
 
 });

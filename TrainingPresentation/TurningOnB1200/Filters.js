@@ -15,7 +15,7 @@ export default class FiltersPage extends Component {
             <Container>
                 <Header>
                     <Body>
-                    <Title>Включение Спектрофотометра В-1200. Инициализация системы. Лампы</Title>
+                    <Title>Включение Спектрофотометра В-1200. Инициализация системы</Title>
                     </Body>
                 </Header>
                 <Content padder >
@@ -25,6 +25,13 @@ export default class FiltersPage extends Component {
                                 <View style={{
                                     width: "40%"
                                 }}>
+                                    <Text style={{
+                                        fontSize:15,
+                                        marginBottom: 10,
+                                        fontWeight: 'bold',
+                                    }}>
+                                        2. Фильтры.
+                                    </Text>
                                     <Text style={{
                                         fontSize:15,
                                         marginBottom: 10

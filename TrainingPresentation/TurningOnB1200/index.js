@@ -17,6 +17,13 @@ import Filters from "./Filters.js"
 import AutomaticHolder from "./AutomaticHolder.js"
 import NextPage2 from "./NextPage2.js"
 import Pass from "./Pass.js"
+import Remembered from "./Remembered.js"
+import Remembered1 from "./Remembered1.js"
+import DarkCurrent from "./DarkCurrent.js"
+import Wavelength from "./Wavelength.js"
+import Energy from "./Energy.js"
+import MainMenu from "./MainMenu.js"
+import NextPage3 from "./NextPage3.js"
 
 const turningOnB1200Route = DrawerNavigator({
     turningOnB1200: {screen:turningOnB1200},
@@ -37,6 +44,13 @@ const turningOnB1200Route = DrawerNavigator({
     AutomaticHolder: {screen: AutomaticHolder},
     NextPage2: {screen: NextPage2},
     Pass: {screen: Pass},
+    Remembered: {screen: Remembered},
+    Remembered1: {screen: Remembered1},
+    DarkCurrent: {screen: DarkCurrent},
+    Wavelength: {screen: Wavelength},
+    Energy: {screen: Energy},
+    MainMenu: {screen: MainMenu},
+    NextPage3: {screen: NextPage3},
 
     ///Profile: { screen: ProfileScreen },
 });
